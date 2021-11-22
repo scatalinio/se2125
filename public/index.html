@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    hello world
+    <a href="pages/next.html">Next</a>
+
+    <div id="results">
+        <table>
+            <thead>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Gender</th>
+            </thead>
+            <tbody id="results-body"></tbody>
+        </table>
+    </div>
+    
+</body>
+<script>
+    const displayStudents = () => {
+        fetch("student/getStudents")
+        .then(respose => {
+            return respose.json()
+        }).then(respose => {
+            const resultsBody = document.querySelector("#results-body");
+            respose.forEach(element => {
+                let newRow = "<tr><td>" + element.id + "</td><td>" + element.name + "</td>" +
+                            "<td>" + element.gender + "</td></tr>";
+                resultsBody.innerHTML +=  newRow;
+            });
+        })
+    }
+    displayStudents()
+</script>
+</html>
