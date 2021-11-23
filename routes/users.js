@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const { Pool, Client } = require('pg');
+const jwt = require('jsonwebtoken');
 require('dotenv').config()
 var router = express.Router();
 
@@ -51,14 +52,19 @@ router.post("/login", async function(req, res, next) {
   console.log("usernasme", username);
   console.log("password", password);
   //await pool.connect();
-  const results = await pool.query("select * from users where username = '" + username + "'" ); 
+  let query = "select * from users where username = $1" ;
+  let values = [username]; //';delete from users where '1' = '1
+  //select * from users where username = $1
+  // select * from users where username = '\';delete from users where \'1\' = \'1'
+  console.log(query);
+  const results = await pool.query(query, values); 
   console.log(results.rows);
   if(results.rows.length > 0) {
     //matches founds
     if(results.rows[0].password == password) {
       res.json({
         status: 'success',
-        token: "wedfghjkl;sdfdsfdsfs"
+        token: jwt.sign(username, process.env.TOKEN_SECRET)
       })
       //res.send(200);
     } else {
