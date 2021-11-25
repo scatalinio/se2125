@@ -32,7 +32,7 @@ loginButton.onclick = () => {
         //1. get token from results
         //2. store token to cookies
         cookies("token", res.token)
-
+        window.location.href = "/pages/user.html"
     }).catch(error => {
         console.log(error);
         $("#login-message").textContent = error

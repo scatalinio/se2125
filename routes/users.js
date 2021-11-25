@@ -20,6 +20,12 @@ router.get('/', function(req, res, next) {
 });
 
 
+router.post('/getUser',function(req, res, next) {
+  console.log(req);
+  
+  res.sendStatus(200);
+});
+
 router.get('/changePassword', function(req, res, next) {
   res.send('respond with a resource');
 });
