@@ -3,10 +3,13 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const passport = require('passport');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var user2Router = require('./routes/secureusers');
 var studentsRouter = require('./routes/students');
+require('dotenv').config()
 var cors = require('cors')
 
 var app = express();
@@ -21,11 +24,34 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+const JWTstrategy = require('passport-jwt').Strategy;
+const ExtractJWT = require('passport-jwt').ExtractJwt;
+
+console.log(process.env.TOKEN_SECRET)
+passport.use(
+  new JWTstrategy(
+    {
+      secretOrKey: process.env.TOKEN_SECRET,
+      jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken()
+    },
+    (token, done) => {
+      try {
+        return done(null, token.username);
+      } catch (error) {
+        done(error);
+      }
+    }
+  )
+);
+app.use(passport.initialize());
+
 app.use(cors({
   origin: 'http://localhost:3001'
 }));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/users-secured',  passport.authenticate('jwt', { session: false }), user2Router);
 app.use('/student', studentsRouter);
 
 // catch 404 and forward to error handler
