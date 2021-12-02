@@ -8,11 +8,11 @@ window.onload = () => {
             method: "POST",
             headers: {
                 'Content-Type': 'application/json',
-                'Authentication': 'Bearer ' + getCookie("token")
+                'Authorization': "Bearer " + getCookie("token")
             }
         }).then(res => {
             if (res.ok) {
-              return res.json();
+              return res;
             } else if(res.status == 401) {
                 throw new Error('Access Denied');       
             } else {
@@ -20,10 +20,10 @@ window.onload = () => {
             }
     
         }).then(res => {
-            setTimeout(validateSession, 3000);
+            setTimeout(validateSession, 10000);
         }).catch(error => {
-            console.log(error);
-            //window.location.href = "/pages/login.html"
+            console.error(error);
+            window.location.href = "/pages/login.html"
         })
     }
     validateSession();

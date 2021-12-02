@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 const { Pool, Client } = require('pg');
 const jwt = require('jsonwebtoken');
+const passport = require('passport');
 require('dotenv').config()
 var router = express.Router();
 
@@ -68,17 +69,19 @@ router.post("/login", async function(req, res, next) {
   if(results.rows.length > 0) {
     //matches founds
     if(results.rows[0].password == password) {
+      const n = { username: username, name: results.rows[0].name };
       res.json({
         status: 'success',
-        token: jwt.sign(username, process.env.TOKEN_SECRET)
+        token: jwt.sign(n, process.env.TOKEN_SECRET)
       })
       //res.send(200);
     } else {
-      res.send(401);
+      
+      res.sendStatus(401);
     }
   } else {
     //no matches
-    res.send(401);
+    res.sendStatus(401);
   }
 })
 

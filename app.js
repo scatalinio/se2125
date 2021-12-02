@@ -9,6 +9,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var user2Router = require('./routes/secureusers');
 var studentsRouter = require('./routes/students');
+require('dotenv').config()
 var cors = require('cors')
 
 var app = express();
@@ -27,22 +28,23 @@ app.use(express.static(path.join(__dirname, 'public')));
 const JWTstrategy = require('passport-jwt').Strategy;
 const ExtractJWT = require('passport-jwt').ExtractJwt;
 
+console.log(process.env.TOKEN_SECRET)
 passport.use(
   new JWTstrategy(
     {
-      secretOrKey: 'HELLO_SE_FRIENDS',
-      jwtFromRequest: ExtractJWT.fromUrlQueryParameter('secret_token')
+      secretOrKey: process.env.TOKEN_SECRET,
+      jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken()
     },
-    async (token, done) => {
+    (token, done) => {
       try {
-        return done(null, token.user);
+        return done(null, token.username);
       } catch (error) {
         done(error);
       }
     }
   )
 );
-
+app.use(passport.initialize());
 
 app.use(cors({
   origin: 'http://localhost:3001'
