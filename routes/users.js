@@ -7,10 +7,10 @@ require('dotenv').config()
 var router = express.Router();
 
 const pool = new Pool({
-  user: 'postgres',
-  password: 'root',
-  database: 'postgres',
-  host: 'localhost',
+  user: 'vrgnrizumsqiut',
+  password: '80c02a3f565ea24551d1c5e7b0c4bb495c454ae22a407349470d59808669154d',
+  database: 'd9aholjd8qmsp1',
+  host: 'ec2-3-228-75-39.compute-1.amazonaws.com',
   port: '5432'
 });
 
